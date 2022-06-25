@@ -1,12 +1,41 @@
-//const apiUrl = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=ea2b9f6ad8fc9053a1441fec10b6db8b&page=1';
-//const IMGPATH = "https://wallpaperaccess.com/sukuna-4k"
-//const SEARCHAPI ="https://api.themoviedb.org/3/movie/550?api_key=ea2b9f6ad8fc9053a1441fec10b6db8b"
-const apiUrl = 'https://api.themoviedb.org/3/movie/550?api_key=ea2b9f6ad8fc9053a1441fec10b6db8b';
-const main = document.querySelector('main');
-const search = document.querySelector('search');
-const form = document.querySelector('form');
-searchBtn=document.querySelector("button");
-fetch(apiUrl)
-  .then(response => response.json())
-  .then(data => console.log(data));
-  
+const apiUrl = 'https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=ea2b9f6ad8fc9053a1441fec10b6db8b&page=1';
+const IMGPATH = "https://image.tmdb.org/t/p/w1280";
+const SEARCHAPI =
+    "https://api.themoviedb.org/3/search/movie?&api_key=ea2b9f6ad8fc9053a1441fec10b6db8b&query=";
+
+const main = document.getElementById("main");
+const form = document.getElementById("form");
+const search = document.getElementById("search");
+
+showMovies(apiUrl);
+function showMovies(url){
+    fetch(url).then(res => res.json())
+    .then(function(data){
+    console.log(data.results);
+    data.results.forEach(element => {
+        const el = document.createElement('div');
+        const image = document.createElement('img');
+        const text = document.createElement('h2');
+
+        text.innerHTML = `${element.title}`;
+        image.src = IMGPATH + element.poster_path;
+        el.appendChild(image);
+        el.appendChild(text);
+        main.appendChild(el);
+    }); 
+});
+}
+
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    main.innerHTML = '';
+     
+    const searchTerm = search.value;
+
+    if (searchTerm) {
+        showMovies(SEARCHAPI + searchTerm);
+        search.value = "";
+    }
+});
+
